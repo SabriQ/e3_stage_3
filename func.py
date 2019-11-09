@@ -22,7 +22,8 @@ def countdown(seconds):
 def check_ports(*serial_ports):
     ports = [i.device for i in serial.tools.list_ports.comports()]
     if len(ports) == 0:
-        sys.exit("There is no ports avilable")
+        print("There is no ports avilable")
+        sys.exit()
     else:
         for i in serial_ports:
             if i in ports:
@@ -218,14 +219,142 @@ def stage_2a (serial_ports = [r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137
 
   #  print(f"{os.path.basename(video_name)} is saved.")
     print(f"training log is saved in {os.path.basename(log_name)}")
+
+    
+def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",video_record = True,
+             according_to="Trial",Time=1200,Trial=60,data_dir=r"C:\Users\Sabri\Desktop\test"):
+    '''
+    stage3 is shuttle run ...
+    '''
+    #检查端口是否可用
+    check_ports(serial_ports)
+    ser_ctrl = serial.Serial(serial_ports[0],baudrate=9600,timeout=0.1)
+    ser_motor = serial.Serial(serial_ports[1],baudrate=9600,timeout=0.1)
+    #设置数据存放路径 年月日；设置log文件，视频文件的名字；context_orders
+    data_dir = os.path.join(data_dir,time.strftime("%Y%m%d", time.localtime()))
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+        print(f"{data_dir} is created")
+#    if not os.path.exists(data_dir):
+#        print("path is wrong")
+#        sys.exit()
+    current_time = time.strftime("%Y%m%d-%H%M%S", time.localtime())
+    log_name = os.path.join(data_dir,mouse_id+"-"+current_time+'_log.csv')
+    video_name = os.path.join(data_dir,mouse_id+'-'+current_time+'.mp4')
+    context_orders = RandomContextOrder().tolists()
+    current_context_orders = context_orders.pop()
+    #初始化context的位置
+    # case 48 0 move to context 1
+    # case 51 3 move to context 2
+    # case 52 4 pump ll
+    # case 53 5 pump lr
+    # case 54 6 pump rl
+    # case 55 7 pump rr
+    ser_motor.write('0') ; current_context = 1
+    input("请按Enter开始实验（倒计时3s之后开启，摄像头会率先启动）：")
+
+    #开始实验
+    #开始视频录制
+    if video_record:
+        video = video_recording(video_name)
+        print(f'{os.path.basename(video_name)} is recording')
+    else:
+        video = video_online_play()
+    countdown(3)
+    #在log文件中写入title
+    with open(log_name, 'w',newline="",encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["Trial_Num","Choice","Choice_Count","A_NosePoke","A_ContextEnter",
+                         "A_ContextExit","A_Choice","A_ContextREnter","A_ContextRExit"])
+    print(["Trial_Num","Choice","Choice_Count"])
+    
+    video_start_time = time.time()
+    
+    Trial_Num=[],Choice=[]
+    A_NosePoke=[],A_ContextEnter=[],A_ContextExit=[],A_Choice=[],A_ContextREnter=[],A_ContextRExit=[]
+    P_NosePoke=[],P_ContextEnter=[],P_ContextExit=[],P_Choice=[],P_ContextREnter=[],P_ContextRExit=[]
+    
+    while True:
+        info = ser_ctrl.readline().decode("utf-8").strip().split(" ")# waiting for 0.1s
+        time_elapse = time.time()-video_start_time
+        if len(info)>2:
+            if "Stat1" in info:
+                P_NosePoke.append(time_elapse)
+                if len(current_context_orders) == 0:
+                    current_context_orders = context_orders.pop()
+                    if len(context_orders)==0:
+                        time.sleep(1)
+                        video.communicate('q')
+                        print("all blocks are already done!")
+                        break
+                #获取下一个conext 
+                next_context = current_context_orders.pop()
+                #切换context
+                if next_context == "1":
+                    if curren_context == "2":
+                        ser_motor.write("3")
+                        current_context = next_context
+                if next_context == "2":
+                    if current_context == "1":
+                        ser_motor.write("0")
+                        current_context = next_context
+                        
+            if "Stat2" in info:
+                P_ContextEnter.append(time_elapse)
+            if "Stat3" in info:
+                P_ContextExit.append(time_elapse)
+            if "Stat4" in info:
+                P_Choice.append(time_elapse)
+            if "Stat5" in info:
+                P_ContextREnter.append(time_elapse)
+            if "Stat6" in info:
+                P_ContextRExit.append(time_elapse)
+            if "Sum" in info:
+                Trial_Num.append(info[1])
+                Choice.append(info[2])
+                Choice_count = info[3]
+                A_NosePoke.append(info[4])
+                A_ContextEnter.append(info[5])
+                A_ContextExit.append(info[6])
+                A_Choice.append(info[7])
+                A_ContextREnter.append(info[8])
+                A_ContextRExit.append(info[9])
+                
+                row=[Trial_Num[-1],Choice[-1],Choice_count
+                     ,A_NosePoke[-1],A_ContextEnter[-1],A_ContextExit[-1],A_Choice[-1],A_ContextREnter[-1],P_ContextRExit[-1]
+                     ,P_NosePoke[-1],P_ContextEnter[-1],P_ContextExit[-1],P_Choice[-1],P_ContextREnter[-1],P_ContextRExit[-1]]
+                with open(log_name,"a",newline="\n",encoding='utf-8') as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writer()
+        # 时间进度输出
+        sys.stdout.write("time elapses %.1fs"%(time_elapse))
+        sys.stdout.write("\r")
+        #another situation: for certain number of trials
+        if according_to == "Time":
+            if time_elapse >=Time:
+                if video_record:
+                    time.sleep(1)
+                    video.communicate('q')
+                break
+        elif according_to =="Trial": # trial <= 90 
+            if info[2]==Trial+1:
+                if video_record:
+                    time.sleep(1)
+                    video.communicate('q')
+                break
+        else:
+            print("How do you decide to count down your experiments, 'Time'or'Trial'?")
+            sys.exit()
+    print(f"training log is saved in {os.path.basename(log_name)}")
     
 if __name__ == "__main__":
-
-    stage_1(serial_port = sys.argv[1]
-    ,mouse_id=sys.argv[2]
-    ,video_record = True
-    , according_to="Time"
-    ,Time=1400
-    ,Trial=40
-    ,data_dir=r"/home/qiushou/Documents/data/linear_track")
+    stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",video_record = False,
+             according_to="Trial",Time=1200,Trial=60,data_dir=r"C:\Users\Sabri\Desktop\test")
+##    stage_3(serial_port = sys.argv[1]
+##    ,mouse_id=sys.argv[2]
+##    ,video_record = True
+##    , according_to="Time"
+##    ,Time=1400
+##    ,Trial=40
+##    ,data_dir=r"/home/qiushou/Documents/data/linear_track")
 
