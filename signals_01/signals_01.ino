@@ -75,15 +75,15 @@ void loop() {
 //  ir[5] ir_rs // context exit or reverse_enter
   if(on_signal >= 0.90){      
     do{Read_ir();}while(ir[0]==0);  //ir_ll as nose poke
-    Serial.println("Stat: nose poke");
+    Serial.println("Stat1: nose poke");
     unsigned long start_trial_time = millis();// means one trial gets started
     Trial_num =Trial_num + 1;       
     do{Read_ir();}while(ir[2]==0);unsigned long context_enter_time = millis();
-    Serial.println("Stat: context enter");
+    Serial.println("Stat2: context enter");
     do{Read_ir();}while(ir[5]==0);unsigned long context_exit_time = millis();
-    Serial.println("Stat: context exit");
+    Serial.println("Stat3: context exit");
     do{Read_ir();}while(ir[3]==0 && ir[4]==0 );unsigned long choice_time = millis();
-    Serial.println("Stat: choice");
+    Serial.println("Stat4: choice");
     if (ir[3]==1){
       left_choice= left_choice + 1;      
       stat = 1;}
@@ -91,9 +91,9 @@ void loop() {
       right_choice=right_choice + 1;
       stat = 2;} 
     do{Read_ir();}while(ir[5]==0);unsigned long context_reverse_enter_time = millis();
-    Serial.println("Stat: context reverse enter");
+    Serial.println("Stat5: context reverse enter");
     do{Read_ir();}while(ir[2]==0);unsigned long context_reverse_exit_time = millis();
-    Serial.println("Stat: context reverse exit");
+    Serial.println("Stat6: context reverse exit");
     Serial.print("Sum: ");
     Serial.print(Trial_num);
     Serial.print(" ");
@@ -121,12 +121,12 @@ void loop() {
     Serial.println(context_reverse_exit_time); 
     stat=0;  
   }else{
-    Read_ir();
-    for (int i = 0;i<6;++i){
-    if (i<5){Serial.print(ir[i]);}
-    else{Serial.println(ir[i]);}}
-    int stat = 0;
-    int Trial_num = 0;
-    int left_choice = 0;
-    int right_choice = 0;}
+//    Read_ir();
+//    for (int i = 0;i<6;++i){
+//    if (i<5){Serial.print(ir[i]);}
+//    else{Serial.println(ir[i]);}}
+    stat = 0;
+    Trial_num = 0;
+    left_choice = 0;
+    right_choice = 0;}
 }
