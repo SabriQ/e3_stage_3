@@ -32,31 +32,7 @@ Serial.begin(9600);
 void loop() {
   // put your main code here, to run repeatedly:
   if (Serial.available()>0){
-    rec_py_signal();
-    /* 0 1 2 3 4 5 6 7 8 9
-       case 48 0 left and right doors go left
-       case 49 1 left and right doors go right
-
-       case 50 2 left door goes left
-       case 51 3 left door goes right
-
-       case 52 4 right door goes left
-       case 53 5 right door goes right
-
-       case 54 6 move to context A, approaching stepper(left)
-       case 55 7 move to context A, leaving stepper(right)
-
-       case 56 8 move to context B, approaching stepper(left)
-       case 57 9 move to context B, leaving stepper(right)
-
-       case 97 a stand by for more contexts
-       case 98 b stand by
-       case 99 c stand by
-       case    d stand by
-       ... ...
-     */
-     //Serial.println("111");
-  } 
+    rec_py_signal();  } 
   //Serial.println("000");
 }
 void pulse_stepper(int port_out, float Freq)
@@ -120,13 +96,13 @@ void rec_py_signal(){
       water_deliver(p_ll,50);
       break;
     case 53://5
-      water_deliver(p_lr,50);
+      water_deliver(p_lr,8); 
       break;
     case 54://6
-      water_deliver(p_rl,50);
+      water_deliver(p_rl,8);
       break;
     case 55://7
-      water_deliver(p_rr,50);
+      water_deliver(p_rr,8);
       break;
     default:
       break;

@@ -60,7 +60,7 @@ void Read_ir(){
 //  Serial.print(Read_analog(ir_rr,10));Serial.print(" ");
 //  Serial.println(Read_analog(ir_rs,10));  
 //  delay(100);
-  return 0;  
+    
 }
 
 void loop() {
