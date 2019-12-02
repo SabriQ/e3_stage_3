@@ -95,11 +95,13 @@ void loop() {
     do{Read_ir();}while(ir[5]==0);unsigned long context_exit_time = millis();
     Serial.println("Stat3: context exit");
     do{Read_ir();}while(ir[3]==0 && ir[4]==0 );unsigned long choice_time = millis();
-    Serial.println("Stat4: choice ");
+    Serial.print("Stat4: choice ");
     if (ir[3]==1){
+      Serial.println("l");
       left_choice= left_choice + 1;      
       stat = 1;}
     else if (ir[4]==1){
+      Serial.println("r");
       right_choice=right_choice + 1;
       stat = 2;} 
     do{Read_ir();}while(ir[5]==0);unsigned long context_reverse_enter_time = millis();

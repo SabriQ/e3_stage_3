@@ -165,7 +165,7 @@ def stage_1b (serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",
     show_info = "Ready "
     while True:
         info = ser_ctrl.readline().decode("utf-8").strip().split(" ")# waiting for 0.1s
-        #print(info)
+        print(len(info))
         time_elapse = time.time()-exp_start_time
         if len(info)>1:
             if "Stat1:" in info:
@@ -356,16 +356,18 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
     # case 54 6 pump rl
     # case 55 7 pump rr
     ser_motor.write('0') ; current_context = 1
-    input("请按Enter开始实验（倒计时3s之后开启，摄像头会率先启动）：")
-
-    #开始实验
+	
+	#开始实验
     #开始视频录制
     if video_record:
+        input("请按Enter开始实验(倒计时3s之后实验开启计时，摄像头会率先启动)：")
         video = video_recording(video_name)
         print(f'{os.path.basename(video_name)} is recording')
+        countdown(3)
     else:
-        video = video_online_play()
-    countdown(3)
+        input("请按Enter开始实验:")
+		video = video_online_play()
+
     #在log文件中写入title
     with open(log_name, 'w',newline="",encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
@@ -373,18 +375,18 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                          "A_ContextExit","A_Choice","A_ContextREnter","A_ContextRExit"])
     print(["Trial_Num","Choice","Choice_Count"])
     
-    video_start_time = time.time()
+    exp_start_time = time.time()
     
-    Trial_Num=[],Choice=[]
-    A_NosePoke=[],A_ContextEnter=[],A_ContextExit=[],A_Choice=[],A_ContextREnter=[],A_ContextRExit=[]
-    P_NosePoke=[],P_ContextEnter=[],P_ContextExit=[],P_Choice=[],P_ContextREnter=[],P_ContextRExit=[]
-    
+    Trial_Num=[];Choice=[]
+    A_NosePoke=[];A_ContextEnter=[];A_ContextExit=[];A_Choice=[];A_ContextREnter=[];A_ContextRExit=[]
+    P_NosePoke=[];P_ContextEnter=[];P_ContextExit=[];P_Choice=[];P_ContextREnter=[];P_ContextRExit=[]
     while True:
         info = ser_ctrl.readline().decode("utf-8").strip().split(" ")# waiting for 0.1s
-        time_elapse = time.time()-video_start_time
+        time_elapse = time.time()-exp_start_time
         if len(info)>2:
             if "Stat1" in info:
                 P_NosePoke.append(time_elapse)
+				ser_motor.write("5".encode())
                 if len(current_context_orders) == 0:
                     current_context_orders = context_orders.pop()
                     if len(context_orders)==0:
@@ -397,11 +399,11 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                 #切换context
                 if next_context == "1":
                     if curren_context == "2":
-                        ser_motor.write("3")
+                        ser_motor.write("3".encode())
                         current_context = next_context
                 if next_context == "2":
                     if current_context == "1":
-                        ser_motor.write("0")
+                        ser_motor.write("0".encode())
                         current_context = next_context
                         
             if "Stat2" in info:
@@ -410,6 +412,14 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                 P_ContextExit.append(time_elapse)
             if "Stat4" in info:
                 P_Choice.append(time_elapse)
+				if current_context == "1" and info[-1] =="l"
+					ser_motor.write("6".encode())
+					choice_judge = "hit"
+				elif curren_context=="2" and info[-1]=="r":
+					ser_motor.write("7".encode())
+					choice_judge = "hit"
+				else:
+					choice_judge = "wrong"
             if "Stat5" in info:
                 P_ContextREnter.append(time_elapse)
             if "Stat6" in info:
@@ -430,11 +440,17 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                      ,P_NosePoke[-1],P_ContextEnter[-1],P_ContextExit[-1],P_Choice[-1],P_ContextREnter[-1],P_ContextRExit[-1]]
                 with open(log_name,"a",newline="\n",encoding='utf-8') as csvfile:
                     writer = csv.writer(csvfile)
-                    writer.writer()
-                print(row[0:4])
+                    writer.writerow(row)
+                print(row[0:3])
         # 时间进度输出
-        sys.stdout.write("time elapses %.1fs"%(time_elapse))
-        sys.stdout.write("\r")
+			show_info = ''.join([i for i in info]) 
+            if "Sum" in show_info:
+                show_info = "Ready "
+			if "Stat4" in show_info:
+				show_info.append(f" {choice_judge}")
+        print(f"\r{show_info}".ljust(25),f"time elapses {round(time_elapse,1)}s",end="")
+        #sys.stdout.write("time elapses %.1fs"%(time_elapse))
+        #sys.stdout.write("\r")
         #another situation: for certain number of trials
         if according_to == "Time":
             if time_elapse >=Time:
@@ -443,11 +459,12 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                     video.communicate('q')
                 break
         elif according_to =="Trial": # trial <= 90 
-            if info[2]==Trial+1:
-                if video_record:
-                    time.sleep(1)
-                    video.communicate('q')
-                break
+			if len(info)>2:
+				if info[2]==Trial+1:
+					if video_record:
+						time.sleep(1)
+						video.communicate('q')
+					break
         else:
             print("How do you decide to count down your experiments, 'Time'or'Trial'?")
             sys.exit()
