@@ -197,7 +197,7 @@ def stage_1b (serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",
                 with open(log_name,"a",newline="\n",encoding='utf-8') as csvfile:
                     writer = csv.writer(csvfile)
                     writer.writerow(row)
-                print(row[0:4])
+                print(f"{row[0:3]} ")
         # 时间进度输出
             show_info = ''.join([i for i in info]) 
             if "Sum" in show_info:

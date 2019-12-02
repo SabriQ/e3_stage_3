@@ -55,12 +55,12 @@ void Read_ir(){
   float rl = Read_analog(ir_rl,10);
   float rr = Read_analog(ir_rr,10);
   float rs = Read_analog(ir_rs,10);
-  if (ll < 500 && ll >1){ir[0] = 1;}else{ir[0] = 0;}  
-  if (lr < 500 && lr >1){ir[1] = 1;}else{ir[1] = 0;}  
-  if (ls < 500 && ls >1){ir[2] = 1;}else{ir[2] = 0;}  
-  if (rl < 500 && rl >1){ir[3] = 1;}else{ir[3] = 0;}  
-  if (rr < 800 && rr >1){ir[4] = 1;}else{ir[4] = 0;}  
-  if (rs < 500 && rs >1){ir[5] = 1;}else{ir[5] = 0;}   
+  if (ll < 500 && ll >5){ir[0] = 1;}else{ir[0] = 0;}  
+  if (lr < 500 && lr >5){ir[1] = 1;}else{ir[1] = 0;}  
+  if (ls < 500 && ls >5){ir[2] = 1;}else{ir[2] = 0;}  
+  if (rl < 500 && rl >5){ir[3] = 1;}else{ir[3] = 0;}  
+  if (rr < 800 && rr >5){ir[4] = 1;}else{ir[4] = 0;}  
+  if (rs < 500 && rs >5){ir[5] = 1;}else{ir[5] = 0;}   
 //  Serial.print(ll);Serial.print(" ");
 //  Serial.print(lr);Serial.print(" ");
 //  Serial.print(ls);Serial.print(" ");
@@ -103,9 +103,9 @@ void loop() {
       right_choice=right_choice + 1;
       stat = 2;} 
     do{Read_ir();}while(ir[5]==0);unsigned long context_reverse_enter_time = millis();
-    Serial.println("Stat5: context reverse enter");
+    Serial.println("Stat5: contextRenter");
     do{Read_ir();}while(ir[2]==0);unsigned long context_reverse_exit_time = millis();
-    Serial.println("Stat6: context reverse exit");
+    Serial.println("Stat6: contextRexit");
     Serial.print("Sum: ");
     Serial.print(Trial_num);
     Serial.print(" ");
