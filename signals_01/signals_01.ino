@@ -5,7 +5,7 @@ int ON=13;
 int ir_ll = A0;// infra red left-left lick
 int ir_lr = A1;// infra red left-right lick
 int ir_ls = A2;// infra red left-start of context
-int ir_rl = A3;// infra red right-left lick
+int ir_rl = A3;// infra red right-left lick  Serial.print(ll);Serial.print(" ");
 int ir_rr = A4;// infra red right-right lick
 int ir_rs = A5;// infra red right-start of context
 int ir[6];
