@@ -97,10 +97,16 @@ void loop() {
     do{Read_ir();}while(ir[3]==0 && ir[4]==0 );unsigned long choice_time = millis();
     Serial.print("Stat4: choice ");
     if (ir[3]==1){
+<<<<<<< HEAD
       left_choice= left_choice + 1; 
       Serial.println("l") ;    
+=======
+      Serial.println("l");
+      left_choice= left_choice + 1;      
+>>>>>>> 960a4bc09857280d6b5757126fa14abaa236568a
       stat = 1;}
     else if (ir[4]==1){
+      Serial.println("r");
       right_choice=right_choice + 1;
       Serial.println("r") ;   
       stat = 2;} 
