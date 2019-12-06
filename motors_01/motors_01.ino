@@ -49,7 +49,20 @@ void pulse_stepper(int port_out, float Freq)
   delayMicroseconds(int(float(500000 / 800) / Freq));
   //delayMicroseconds(483);
 }
+void pmw (int port){
+  digitalWrite(port,HIGH);
+  delayMicroseconds(200);
+  digitalWrite(port,LOW);
+  delayMicroseconds(1800);
+}
 void water_deliver (int pump, int milliseconds) {
+  int Start = micros();
+  int diff = 0;
+  do{
+  int End = micros();
+  diff = End - Start;
+//  Serial.println(diff);
+  pmw(pump);}while(diff < milliseconds*1000);
   digitalWrite(pump, HIGH);
   delay(milliseconds);
   digitalWrite(pump, LOW);
@@ -98,16 +111,16 @@ void rec_py_signal(){
       digitalWrite(ena,HIGH);
       break;
     case 52://4
-      water_deliver(p_ll,5000);
+      water_deliver(p_ll,1000);
       break;
     case 53://5
-      water_deliver(p_lr,10); 
+      water_deliver(p_lr,9); 
       break;
     case 54://6
-      water_deliver(p_rl,10);
+      water_deliver(p_rl,9);
       break;
     case 55://7
-      water_deliver(p_rr,10);
+      water_deliver(p_rr,9);
       break;
     default:
       break;
