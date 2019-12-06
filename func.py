@@ -335,6 +335,8 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
     check_ports(serial_ports)
     ser_ctrl = serial.Serial(serial_ports[0],baudrate=9600,timeout=0.1)
     ser_motor = serial.Serial(serial_ports[1],baudrate=9600,timeout=0.1)
+    countdown(3)
+    print(serial_ports[1])
     #设置数据存放路径 年月日；设置log文件，视频文件的名字；context_orders
     data_dir = os.path.join(data_dir,time.strftime("%Y%m%d", time.localtime()))
     if not os.path.exists(data_dir):
@@ -355,7 +357,10 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
     # case 53 5 pump lr
     # case 54 6 pump rl
     # case 55 7 pump rr
-    ser_motor.write('0'.encode()) ; current_context = 1
+    print(">>>>>>")
+    ser_motor.write("0".encode())
+    current_context = "1"
+    print("<<<<<<")
 
     #开始实验
     #开始视频录制
@@ -383,6 +388,7 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
         info = ser_ctrl.readline().decode("utf-8").strip().split(" ")# waiting for 0.1s
         time_elapse = time.time()-video_start_time
         if len(info)>1:
+            show_info = ''.join([i for i in info])
             if "Stat1:" in info:
                 P_NosePoke.append(time_elapse);ser_motor.write("5".encode())
                 if len(current_context_orders) == 0:
@@ -393,13 +399,14 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                         print("all blocks are already done!")
                         break
                 #获取下一个conext 
-                next_context = current_context_orders.pop()
+                next_context = str(current_context_orders.pop())
+                #print(current_context,next_context)
                 #切换context
                 if current_context != next_context:
                     if next_context == "1":
-                        ser.motor.write("0".encode())
+                        ser_motor.write("0".encode())
                     if next_context == "2":
-                        ser.motor.write("3".encode())               
+                        ser_motor.write("3".encode())               
                 current_context = next_context
                         
             if "Stat2:" in info:
@@ -408,10 +415,10 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                 P_ContextExit.append(time_elapse)
             if "Stat4:" in info:
                 P_Choice.append(time_elapse);
-                if current_context == "1" and P_Choice[-1]=="r":
+                if next_context  == "1" and P_Choice[-1]=="r":
                     ser_motor.write("6".encode())
                     Choice_Class.append("correct")
-                elif current_context == "2" and P_Choice[-1] == "l":
+                elif next_context == "2" and P_Choice[-1] == "l":
                     ser_motor.write("7".encode())
                     Choice_Class.append("correct")
                 else:
@@ -439,7 +446,6 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                     writer.writerow(row)
                 print(row[0:4])
         #时间进度输出
-            show_info = ''.join([i for i in info])
             if "Sum" in show_info:
                 show_info = "Ready "
         print(f"\r{show_info}".ljust(25),f"current_context: {current_context}".ljust(20),f"time elapses {round(time_elapse,1)}s",end="")
@@ -465,7 +471,7 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
     print(f"training log is saved in {os.path.basename(log_name)}")
     
 if __name__ == "__main__":
-    stage_1b(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=sys.argv[1],video_record = False,
+    stage_3(serial_ports=[r'/dev/ttyUSB1',r'/dev/ttyUSB2'],mouse_id="test",video_record = False,
              according_to="Time",Time=1200,Trial=60,data_dir=r"/home/qiushou/Documents/data/linear_track")
 ##    stage_3(serial_port = sys.argv[1]
 ##    ,mouse_id=sys.argv[2]

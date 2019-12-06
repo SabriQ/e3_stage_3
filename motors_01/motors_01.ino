@@ -98,16 +98,16 @@ void rec_py_signal(){
       digitalWrite(ena,HIGH);
       break;
     case 52://4
-      water_deliver(p_ll,50);
+      water_deliver(p_ll,5000);
       break;
     case 53://5
-      water_deliver(p_lr,50); 
+      water_deliver(p_lr,10); 
       break;
     case 54://6
-      water_deliver(p_rl,50);
+      water_deliver(p_rl,10);
       break;
     case 55://7
-      water_deliver(p_rr,50);
+      water_deliver(p_rr,10);
       break;
     default:
       break;
