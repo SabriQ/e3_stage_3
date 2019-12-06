@@ -359,6 +359,7 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
     # case 55 7 pump rr
     print(">>>>>>")
     ser_motor.write("0".encode())
+    ser_motor.write("5".encode())
     current_context = "1"
     print("<<<<<<")
 
@@ -395,7 +396,8 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                     current_context_orders = context_orders.pop()
                     if len(context_orders)==0:
                         time.sleep(1)
-                        video.communicate('q')
+                        if video_record:
+                            video.communicate('q')
                         print("all blocks are already done!")
                         break
                 #获取下一个conext 
@@ -415,10 +417,10 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                 P_ContextExit.append(time_elapse)
             if "Stat4:" in info:
                 P_Choice.append(time_elapse);
-                if next_context  == "1" and P_Choice[-1]=="r":
+                if next_context  == "1" and info[-1]=="r":
                     ser_motor.write("6".encode())
                     Choice_Class.append("correct")
-                elif next_context == "2" and P_Choice[-1] == "l":
+                elif next_context == "2" and info[-1] == "l":
                     ser_motor.write("7".encode())
                     Choice_Class.append("correct")
                 else:
@@ -448,7 +450,7 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
         #时间进度输出
             if "Sum" in show_info:
                 show_info = "Ready "
-        print(f"\r{show_info}".ljust(25),f"current_context: {current_context}".ljust(20),f"time elapses {round(time_elapse,1)}s",end="")
+        print(f"\r{show_info}".ljust(25),f"current_context: {current_context}".ljust(20),f"time elapses {round(time_elapse,1)}s  ",end="")
         #sys.stdout.write("time elapses %.1fs"%(time_elapse))
         #sys.stdout.write("\r")
         #another situation: for certain number of trials
