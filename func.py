@@ -33,9 +33,18 @@ def check_ports(serial_ports):
                 sys.exit()
 #check_ports(r'/dev/ttyUSB0')
 
-def RandomContextOrder(context_nu=2,trials=30,blocks=3):
-    np.random.seed(12) # 取值12，
-    return np.random.randint(1,context_nu+1,(blocks,trials))
+#def RandomContextOrder(context_nu=2,trials=30,blocks=3):
+def RandomContextOrder():
+	ContextOrder = [
+	[1,2,2,2,1,1,2,1,2,1],
+	[2,2,2,2,1,1,1,1,2,1],
+	[1,2,2,1,1,2,2,2,1,1],
+	[2,1,1,2,2,1,2,1,2,1],
+	[1,2,2,1,1,2,1,2,1,2],
+	[1,2,1,2,1,2,2,1,2,1]]
+	return ContextOrder
+    #np.random.seed(12) # 取值12，
+    #return np.random.randint(1,context_nu+1,(blocks,trials))
 #p.sum(np.where(RandomContextOrder(2,30,3)==1,1,0),axis=1)
 
 #%% stage_1
@@ -253,7 +262,7 @@ def stage_2a (serial_ports = [r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137
     current_time = time.strftime("%Y%m%d-%H%M%S", time.localtime())
     log_name = os.path.join(data_dir,mouse_id+"-"+current_time+'_log.csv')
     video_name = os.path.join(data_dir,mouse_id+'-'+current_time+'.mp4')
-    context_orders = RandomContextOrder().tolists()
+    context_orders = RandomContextOrder()
     current_context_orders = context_orders.pop()
     #初始化context的位置
     ##case 54 6 move to context A, approaching stepper(left)
@@ -348,7 +357,7 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
     current_time = time.strftime("%Y%m%d-%H%M%S", time.localtime())
     log_name = os.path.join(data_dir,mouse_id+"-"+current_time+'_log.csv')
     video_name = os.path.join(data_dir,mouse_id+'-'+current_time+'.mp4')
-    context_orders = RandomContextOrder().tolist()
+    context_orders = RandomContextOrder()
     current_context_orders = context_orders.pop()
     #初始化context的位置
     # case 48 0 move to context 1
