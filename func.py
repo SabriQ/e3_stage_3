@@ -35,28 +35,28 @@ def check_ports(serial_ports):
 
 #def RandomContextOrder(context_nu=2,trials=30,blocks=3):
 def RandomContextOrder():
-	ContextOrder_1 = [
+    ContextOrder_1 = [
 	[1,2,2,2,1,1,2,1,2,1],
 	[2,2,2,2,1,1,1,1,2,1],
 	[1,2,2,1,1,2,2,2,1,1],
 	[2,1,1,2,2,1,2,1,2,1],
 	[1,2,2,1,1,2,1,2,1,2],
 	[1,2,1,2,1,2,2,1,2,1]]
-        ContextOrder_2 = [
+    ContextOrder_2 = [
         [1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1]]
-        ContextOrder_3= [
+    ContextOrder_3= [
         [2,2,2,2,2,2,2,2,2,2],
         [2,2,2,2,2,2,2,2,2,2],
         [2,2,2,2,2,2,2,2,2,2],
         [2,2,2,2,2,2,2,2,2,2],
         [2,2,2,2,2,2,2,2,2,2],
         [2,2,2,2,2,2,2,2,2,2]]
-	return ContextOrder_1
+    return ContextOrder_1
     #np.random.seed(12) # 取值12，
     #return np.random.randint(1,context_nu+1,(blocks,trials))
 #p.sum(np.where(RandomContextOrder(2,30,3)==1,1,0),axis=1)
@@ -498,7 +498,7 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
     print(f"training log is saved in {os.path.basename(log_name)}")
     
 if __name__ == "__main__":
-    stage_3(serial_ports=[r'/dev/ttyUSB1',r'/dev/ttyUSB2'],mouse_id="test",video_record = False,
+    stage_3(serial_ports=[r'/dev/ttyUSB1',r'/dev/ttyUSB0'],mouse_id="test",video_record = False,
              according_to="Time",Time=1200,Trial=60,data_dir=r"/home/qiushou/Documents/data/linear_track")
 ##    stage_3(serial_port = sys.argv[1]
 ##    ,mouse_id=sys.argv[2]
