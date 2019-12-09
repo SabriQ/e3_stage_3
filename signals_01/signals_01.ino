@@ -57,7 +57,7 @@ void Read_ir(){
   float rs = Read_analog(ir_rs,10);
   if (ll < 500 && ll >5){ir[0] = 1;}else{ir[0] = 0;}  
   if (lr < 500 && lr >5){ir[1] = 1;}else{ir[1] = 0;}  
-  if (ls < 500 && ls >5){ir[2] = 1;}else{ir[2] = 0;}  
+  if (ls < 50){ir[2] = 1;}else{ir[2] = 0;}  
   if (rl < 500 && rl >5){ir[3] = 1;}else{ir[3] = 0;}  
   if (rr < 800 && rr >5){ir[4] = 1;}else{ir[4] = 0;}  
   if (rs < 500 && rs >5){ir[5] = 1;}else{ir[5] = 0;}   
@@ -86,7 +86,7 @@ void loop() {
 //  ir[4] ir_rr //one of the choice
 //  ir[5] ir_rs // context exit or reverse_enter
   if(on_signal >= 0.90){      
-    do{Read_ir();}while(ir[0]==0);  //ir_ll as nose poke
+    do{Read_ir();}while(ir[1]==0);  //ir_ll as nose poke
     Serial.println("Stat1: nose_poke");
     unsigned long start_trial_time = millis();// means one trial gets started
     Trial_num =Trial_num + 1;       
@@ -95,20 +95,14 @@ void loop() {
     do{Read_ir();}while(ir[5]==0);unsigned long context_exit_time = millis();
     Serial.println("Stat3: context exit");
     do{Read_ir();}while(ir[3]==0 && ir[4]==0 );unsigned long choice_time = millis();
-    Serial.print("Stat4: choice ");
+    Serial.print("Stat4: choice");
     if (ir[3]==1){
-<<<<<<< HEAD
-      left_choice= left_choice + 1; 
-      Serial.println("l") ;    
-=======
-      Serial.println("l");
+      Serial.println("_l");
       left_choice= left_choice + 1;      
->>>>>>> 960a4bc09857280d6b5757126fa14abaa236568a
       stat = 1;}
     else if (ir[4]==1){
-      Serial.println("r");
       right_choice=right_choice + 1;
-      Serial.println("r") ;   
+      Serial.println("_r") ;   
       stat = 2;} 
     do{Read_ir();}while(ir[5]==0);unsigned long context_reverse_enter_time = millis();
     Serial.println("Stat5: contextRenter");

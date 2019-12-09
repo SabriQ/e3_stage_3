@@ -35,14 +35,28 @@ def check_ports(serial_ports):
 
 #def RandomContextOrder(context_nu=2,trials=30,blocks=3):
 def RandomContextOrder():
-	ContextOrder = [
+	ContextOrder_1 = [
 	[1,2,2,2,1,1,2,1,2,1],
 	[2,2,2,2,1,1,1,1,2,1],
 	[1,2,2,1,1,2,2,2,1,1],
 	[2,1,1,2,2,1,2,1,2,1],
 	[1,2,2,1,1,2,1,2,1,2],
 	[1,2,1,2,1,2,2,1,2,1]]
-	return ContextOrder
+        ContextOrder_2 = [
+        [1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1]]
+        ContextOrder_3= [
+        [2,2,2,2,2,2,2,2,2,2],
+        [2,2,2,2,2,2,2,2,2,2],
+        [2,2,2,2,2,2,2,2,2,2],
+        [2,2,2,2,2,2,2,2,2,2],
+        [2,2,2,2,2,2,2,2,2,2],
+        [2,2,2,2,2,2,2,2,2,2]]
+	return ContextOrder_1
     #np.random.seed(12) # 取值12，
     #return np.random.randint(1,context_nu+1,(blocks,trials))
 #p.sum(np.where(RandomContextOrder(2,30,3)==1,1,0),axis=1)
@@ -400,10 +414,11 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
         if len(info)>1:
             show_info = ''.join([i for i in info])
             if "Stat1:" in info:
-                P_NosePoke.append(time_elapse);ser_motor.write("5".encode())
-                if len(current_context_orders) == 0:
-                    current_context_orders = context_orders.pop()
-                    if len(context_orders)==0:
+                P_NosePoke.append(time_elapse);#ser_motor.write("5".encode())
+                if len(current_context_orders) == 0: 
+                    if len(context_orders) != 0:
+                        current_context_orders = context_orders.pop()
+                    else:
                         time.sleep(1)
                         if video_record:
                             video.communicate('q')
@@ -426,10 +441,11 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                 P_ContextExit.append(time_elapse)
             if "Stat4:" in info:
                 P_Choice.append(time_elapse);
-                if next_context  == "1" and info[-1]=="r":
+                print(info,end=" ")
+                if next_context  == "1" and info[-1]=="choice_l":
                     ser_motor.write("6".encode())
                     Choice_Class.append("correct")
-                elif next_context == "2" and info[-1] == "l":
+                elif next_context == "2" and info[-1] == "choice_r":
                     ser_motor.write("7".encode())
                     Choice_Class.append("correct")
                 else:
