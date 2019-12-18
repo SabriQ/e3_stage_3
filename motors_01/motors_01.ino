@@ -14,7 +14,7 @@ int c_D=8;
 int ctx[2];
 void setup() {
   // put your setup code here, to run once:
-pinMode(ena,OUTPUT);digitalWrite(ena,LOW);
+pinMode(ena,OUTPUT);digitalWrite(ena,HIGH);
 pinMode(dir,OUTPUT);digitalWrite(dir,LOW);
 pinMode(pul,OUTPUT);digitalWrite(pul,LOW);
 pinMode(p_ll,OUTPUT);digitalWrite(p_ll,LOW);
@@ -43,10 +43,11 @@ void loop() {
 void pulse_stepper(int port_out, float Freq)
 {
   digitalWrite(port_out, HIGH);
-  delayMicroseconds(int(float(500000 / 800) / Freq));
+  delayMicroseconds(int(float(500000/800) / Freq));
+  //细分是2,表示一圈要400个pulse;半周期是500000us/400;如果要1s2圈，那么半周期就是500000us/400/2
   //delayMicroseconds(483);
   digitalWrite(port_out, LOW);
-  delayMicroseconds(int(float(500000 / 800) / Freq));
+  delayMicroseconds(int(float(500000/800) / Freq));
   //delayMicroseconds(483);
 }
 void pmw (int port){
@@ -89,25 +90,25 @@ void rec_py_signal(){
     case 48://0 left and right doors go left (approaching motor)
       digitalWrite(ena,LOW);
       digitalWrite(dir,LOW);
-      do{Read_ctx();pulse_stepper(pul,1);}while(ctx[0]==0);
+      do{Read_ctx();pulse_stepper(pul,50);}while(ctx[0]==0); // between 1-2.2
       digitalWrite(ena,HIGH);
       break;
     case 49://1
       digitalWrite(ena,LOW);
       digitalWrite(dir,HIGH);
-      do{Read_ctx();pulse_stepper(pul, 1);}while(ctx[0]==0 && ctx[1]==0);
+      do{Read_ctx();pulse_stepper(pul, 2);}while(ctx[0]==0 && ctx[1]==0);
       digitalWrite(ena,HIGH);
       break;
     case 50://2
       digitalWrite(ena,LOW);
       digitalWrite(dir,LOW);
-      do{Read_ctx();pulse_stepper(pul,1);}while(ctx[0]==0 && ctx[1]==0);
+      do{Read_ctx();pulse_stepper(pul,2);}while(ctx[0]==0 && ctx[1]==0);
       digitalWrite(ena,HIGH);
       break;
     case 51://3
       digitalWrite(ena,LOW);
       digitalWrite(dir,HIGH);
-      do{Read_ctx();pulse_stepper(pul,1);}while(ctx[1]==0);
+      do{Read_ctx();pulse_stepper(pul,50);}while(ctx[1]==0);
       digitalWrite(ena,HIGH);
       break;
     case 52://4
@@ -117,10 +118,10 @@ void rec_py_signal(){
       water_deliver(p_lr,9); 
       break;
     case 54://6
-      water_deliver(p_rl,9);
+      water_deliver(p_rl,9);//9比较合适，11不知道会不会喷出来
       break;
     case 55://7
-      water_deliver(p_rr,9);
+      water_deliver(p_rr,8);
       break;
     default:
       break;

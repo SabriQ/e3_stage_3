@@ -35,28 +35,42 @@ def check_ports(serial_ports):
 
 #def RandomContextOrder(context_nu=2,trials=30,blocks=3):
 def RandomContextOrder():
-    ContextOrder_1 = [
-	[1,2,2,2,1,1,2,1,2,1],
+    ContextOrder_average = [
+	[1,2,1,2,1,2,2,1,2,1],
 	[2,2,2,2,1,1,1,1,2,1],
 	[1,2,2,1,1,2,2,2,1,1],
 	[2,1,1,2,2,1,2,1,2,1],
 	[1,2,2,1,1,2,1,2,1,2],
 	[1,2,1,2,1,2,2,1,2,1]]
-    ContextOrder_2 = [
+    ContextOrder_most_1 =[ 
+        [1,1,1,2,1,2,1,1,2,1],
+        [1,2,1,2,1,1,1,1,2,1],
+        [1,2,1,1,1,2,1,2,1,1],
+        [1,1,1,2,1,1,2,1,2,1],
+        [1,2,1,2,1,1,1,2,1,1],
+        [2,1,1,2,1,2,1,1,2,1]]
+    ContextOrder_most_2 = [
+        [2,2,2,1,2,1,2,2,1,2],
+        [2,1,2,1,2,2,2,2,1,2],
+        [2,1,2,2,2,1,2,1,2,2],
+        [2,2,2,1,2,2,1,2,1,2],
+        [2,1,2,1,2,2,2,1,2,2],
+        [1,2,2,1,2,1,2,2,1,2]]
+    ContextOrder_all_1 = [
         [1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1]]
-    ContextOrder_3= [
+    ContextOrder_all_2= [
         [2,2,2,2,2,2,2,2,2,2],
         [2,2,2,2,2,2,2,2,2,2],
         [2,2,2,2,2,2,2,2,2,2],
         [2,2,2,2,2,2,2,2,2,2],
         [2,2,2,2,2,2,2,2,2,2],
         [2,2,2,2,2,2,2,2,2,2]]
-    return ContextOrder_1
+    return ContextOrder_average
     #np.random.seed(12) # 取值12，
     #return np.random.randint(1,context_nu+1,(blocks,trials))
 #p.sum(np.where(RandomContextOrder(2,30,3)==1,1,0),axis=1)
@@ -414,7 +428,8 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
         if len(info)>1:
             show_info = ''.join([i for i in info])
             if "Stat1:" in info:
-                P_NosePoke.append(time_elapse);#ser_motor.write("5".encode())
+                P_NosePoke.append(time_elapse);
+                ser_motor.write("5".encode())
                 if len(current_context_orders) == 0: 
                     if len(context_orders) != 0:
                         current_context_orders = context_orders.pop()
@@ -442,11 +457,11 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
             if "Stat4:" in info:
                 P_Choice.append(time_elapse);
                 print(info,end=" ")
-                if next_context  == "1" and info[-1]=="choice_l":
-                    ser_motor.write("6".encode())
-                    Choice_Class.append("correct")
-                elif next_context == "2" and info[-1] == "choice_r":
+                if next_context  == "1" and info[-1]=="choice_r":
                     ser_motor.write("7".encode())
+                    Choice_Class.append("correct")
+                elif next_context == "2" and info[-1] == "choice_l":
+                    ser_motor.write("66".encode())
                     Choice_Class.append("correct")
                 else:
                     Choice_Class.append("wrong")
@@ -487,7 +502,7 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                 break
         elif according_to =="Trial": # trial <= 90 
             if len(info)>2:
-                if info[2]==Trial+1:
+                if info[1]==str(Trial):
                     if video_record:
                         time.sleep(1)
                         video.communicate('q')
