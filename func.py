@@ -510,6 +510,8 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
         else:
             print("How do you decide to count down your experiments, 'Time'or'Trial'?")
             sys.exit()
+    ser_ctrl.close()
+    ser_motor.close()
     print(f"training log is saved in {os.path.basename(log_name)}")
     
 if __name__ == "__main__":
