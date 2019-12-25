@@ -396,7 +396,7 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
     # case 55 7 pump rr
     print(">>>>>>")
     ser_motor.write("0".encode())
-    ser_motor.write("5".encode())
+    ser_motor.write("555555555555".encode())
     current_context = "1"
     print("<<<<<<")
 
@@ -429,7 +429,7 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
             show_info = ''.join([i for i in info])
             if "Stat1:" in info:
                 P_NosePoke.append(time_elapse);
-                ser_motor.write("5".encode())
+                #ser_motor.write("5".encode())
                 if len(current_context_orders) == 0: 
                     if len(context_orders) != 0:
                         current_context_orders = context_orders.pop()
@@ -458,10 +458,10 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
                 P_Choice.append(time_elapse);
                 print(info,end=" ")
                 if next_context  == "1" and info[-1]=="choice_r":
-                    ser_motor.write("7".encode())
+                    ser_motor.write("777".encode())
                     Choice_Class.append("correct")
                 elif next_context == "2" and info[-1] == "choice_l":
-                    ser_motor.write("66".encode())
+                    ser_motor.write("666".encode())
                     Choice_Class.append("correct")
                 else:
                     Choice_Class.append("wrong")

@@ -51,19 +51,28 @@ void pulse_stepper(int port_out, float Freq)
   //delayMicroseconds(483);
 }
 void pmw (int port){
-  digitalWrite(port,HIGH);
-  delayMicroseconds(200);
   digitalWrite(port,LOW);
-  delayMicroseconds(1800);
+  delay(10);  
+//  digitalWrite(port,HIGH);
+//  delayMicroseconds(10);
 }
-void water_deliver (int pump, int milliseconds) {
-  int Start = micros();
+void water_deliver(int pump, int milliseconds){
+  digitalWrite(pump,HIGH);
+  delay(3);
+  digitalWrite(pump,LOW);
+  }
+void water_deliver2 (int pump, int milliseconds) {
+  int Start = millis();
   int diff = 0;
-  do{
-  int End = micros();
+  do{ int End = millis();
   diff = End - Start;
-//  Serial.println(diff);
-  pmw(pump);}while(diff < milliseconds*1000);
+  Serial.print(Start);
+  Serial.print(" ");
+  Serial.print(End);
+  Serial.print(" ");
+  Serial.println(diff);
+  pmw(pump);}while(diff < milliseconds);
+  
   digitalWrite(pump, HIGH);
   delay(milliseconds);
   digitalWrite(pump, LOW);
@@ -90,7 +99,7 @@ void rec_py_signal(){
     case 48://0 left and right doors go left (approaching motor)
       digitalWrite(ena,LOW);
       digitalWrite(dir,LOW);
-      do{Read_ctx();pulse_stepper(pul,50);}while(ctx[0]==0); // between 1-2.2
+      do{Read_ctx();pulse_stepper(pul,40);}while(ctx[0]==0); // between 1-2.2
       digitalWrite(ena,HIGH);
       break;
     case 49://1
@@ -108,7 +117,7 @@ void rec_py_signal(){
     case 51://3
       digitalWrite(ena,LOW);
       digitalWrite(dir,HIGH);
-      do{Read_ctx();pulse_stepper(pul,50);}while(ctx[1]==0);
+      do{Read_ctx();pulse_stepper(pul,40);}while(ctx[1]==0);
       digitalWrite(ena,HIGH);
       break;
     case 52://4
@@ -118,7 +127,7 @@ void rec_py_signal(){
       water_deliver(p_lr,9); 
       break;
     case 54://6
-      water_deliver(p_rl,9);//9比较合适，11不知道会不会喷出来
+      water_deliver(p_rl,10);//9比较合适，11不知道会不会喷出来
       break;
     case 55://7
       water_deliver(p_rr,8);
