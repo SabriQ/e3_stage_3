@@ -58,7 +58,8 @@ void pmw (int port){
 }
 void water_deliver(int pump, int milliseconds){
   digitalWrite(pump,HIGH);
-  delay(3);
+  delay(6);
+  //Serial.println("test");
   digitalWrite(pump,LOW);
   }
 void water_deliver2 (int pump, int milliseconds) {
@@ -121,7 +122,7 @@ void rec_py_signal(){
       digitalWrite(ena,HIGH);
       break;
     case 52://4
-      water_deliver(p_ll,1000);
+      water_deliver(p_ll,10);
       break;
     case 53://5
       water_deliver(p_lr,9); 
@@ -130,7 +131,7 @@ void rec_py_signal(){
       water_deliver(p_rl,10);//9比较合适，11不知道会不会喷出来
       break;
     case 55://7
-      water_deliver(p_rr,8);
+      water_deliver(p_rr,10);
       break;
     default:
       break;
