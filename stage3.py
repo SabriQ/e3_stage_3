@@ -1,4 +1,4 @@
-from func import stage_3
+from func_test import stage_3
 from info import send_email
 import sys
 if __name__ == "__main__":
