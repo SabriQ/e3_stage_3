@@ -363,7 +363,7 @@ def stage_2a (serial_ports = [r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137
     print(f"training log is saved in {os.path.basename(log_name)}")
 
     
-def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",video_record = False,
+def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",note = "train",video_record = False,
              according_to="Trial",Time=1200,Trial=60,data_dir=r"C:\Users\Sabri\Desktop\test"):
     '''
     stage3 is shuttle run ...
@@ -383,8 +383,8 @@ def stage_3(serial_ports=[r'/dev/ttyUSB0',r'/dev/ttyUSB1'],mouse_id=r"192137",vi
 #        print("path is wrong")
 #        sys.exit()
     current_time = time.strftime("%Y%m%d-%H%M%S", time.localtime())
-    log_name = os.path.join(data_dir,mouse_id+"-"+current_time+'_log.csv')
-    video_name = os.path.join(data_dir,mouse_id+'-'+current_time+'.mp4')
+    log_name = os.path.join(data_dir,current_time+"-"+mouse_id+"-"+note+'_log.csv')
+    video_name = os.path.join(data_dir,current_time+"-"+mouse_id+"-"+note+'.mp4')
     context_orders = RandomContextOrder()
     current_context_orders = context_orders.pop()
     #初始化context的位置
