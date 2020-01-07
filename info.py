@@ -26,7 +26,7 @@ def send_email(to_list, sub, content):
     #msg['Date'] = formatdate(localtime=True)
     try:
         smtp = smtplib.SMTP()
-        smtp.connect(smtpserver)
+        smtp.connect(smtpserver)：
         smtp.login(username, password)
         #smtp.login(username, password)
         smtp.sendmail(snd_email, to_list, msg.as_string())
