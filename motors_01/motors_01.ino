@@ -58,7 +58,7 @@ void pmw (int port){
 }
 void water_deliver(int pump, int milliseconds){
   digitalWrite(pump,HIGH);
-  delay(6);
+  delay(milliseconds);
   //Serial.println("test");
   digitalWrite(pump,LOW);
   }
