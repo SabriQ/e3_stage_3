@@ -61,13 +61,13 @@ void Read_ir(){
   if (rl < 500 && rl >5){ir[3] = 1;}else{ir[3] = 0;}  
   if (rr < 800 && rr >5){ir[4] = 1;}else{ir[4] = 0;}  
   if (rs < 500 && rs >5){ir[5] = 1;}else{ir[5] = 0;}   
-//  Serial.print(ll);Serial.print(" ");
-//  Serial.print(lr);Serial.print(" ");
-//  Serial.print(ls);Serial.print(" ");
-//  Serial.print(rl);Serial.print(" ");
-//  Serial.print(rr);Serial.print(" ");
-//  Serial.println(rs);  
-//  delay(100);
+  Serial.print(ll);Serial.print(" ");
+  Serial.print(lr);Serial.print(" ");
+  Serial.print(ls);Serial.print(" ");
+  Serial.print(rl);Serial.print(" ");
+  Serial.print(rr);Serial.print(" ");
+  Serial.println(rs);  
+  delay(100);
   }else{
   stat = 0;
   Trial_num = 0;

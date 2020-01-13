@@ -26,7 +26,7 @@ def send_email(to_list, sub, content):
     #msg['Date'] = formatdate(localtime=True)
     try:
         smtp = smtplib.SMTP()
-        smtp.connect(smtpserver)：
+        smtp.connect(smtpserver)
         smtp.login(username, password)
         #smtp.login(username, password)
         smtp.sendmail(snd_email, to_list, msg.as_string())
@@ -45,4 +45,5 @@ def send_wechat_by_serverchan(key="https://sc.ftqq.com/SCU74964T6806c941309121c6
     return send_wechat
     # main...
 if __name__ == '__main__':  
-    send_wechat = send_wechat_by_serverchan()
+    send_wechat = send_wechat_by_serverchan(key="https://sc.ftqq.com/SCU74964T6806c941309121c637fd52c641f1d1725e0c9d2434296.send")
+    send_wechat("test2","test")
